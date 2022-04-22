@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="dao.StudentDao">
+    <select id="selectStudentById" resultType="domain.Student">
+        select *  from student where id  =#{studentId}
+    </select>
+    <insert id="insertStudent">
+        <!-- 如果传入mybatis是一个JAVA对象，使用#{属性名}获取此属性的值
+        属性值放到#{}占位符的位置,mybatis执行此属性对应的getXXX()
+        例如 #{id},执行getId();
+        -->
+        insert into student values(#{id},#{name},#{email},#{age})
+    </insert>
+</mapper>
+
+
+<!--
+    1.约束文件
+      "http://mybatis.org/dtd/mybatis-3-mapper.dtd
+      约束文件作用：定义和限制当前文件中可以使用的标签和属性，以及标签出现的顺序
+
+    2. mapper是根标签
+       namespace：命名空间，必须偶值，不能为空，唯一值。
+                 推荐使用Dao接口的全限定名称。
+       作用：参与识别SQL语句的作用
+
+    3. 在mapper里面可以写<insert> <update> <delete> <select>等标签
+    <select>:表示查询操作，里面是select语句
+    id:要执行的sql语句的唯一标识，是一个自定义字符串
+        推荐使用dao接口中的方法名称
+    resultType：告诉mybatis，执行SQL语句，把数据赋值给哪个类型的JAVA对象
+                值现在使用的是JAVA对象的全限定名称
+
+
+-->

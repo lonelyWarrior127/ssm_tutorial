@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <!-- 配置数据源：创建Connection对象。-->
+            <dataSource type="POOLED">
+                <!--driver 驱动内容-->
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <!--连接数据库的url-->
+                <property name="url" value="jdbc:mysql://localhost:3306/studb?useUnicode=true&amp;characterEncoding=utf-8"/>
+                <!--用户名和密码-->
+                <property name="username" value="root"/>
+                <property name="password" value="099720"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <!--指定其他mapper文件的位置：
+        目的是找到其他文件的SQL语句
+        -->
+    <mappers>
+        <!-- 使用mapper的resource属性指定mapper文件的路径
+        这个路径是从target/class路径开启的
+
+        使用注意：resource ="mapper文件的路径，使用/分割路径"
+        一个mapper resource指定一个mapper文件
+        -->
+        <mapper resource="dao/StudentDao.xml"/>
+    </mappers>
+</configuration>
