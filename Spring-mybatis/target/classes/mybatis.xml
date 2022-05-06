@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+<!--    设置日志-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+<!--    别名-->
+    <typeAliases>
+        <package name ="com.yaop.domain"/>
+    </typeAliases>
+
+    <!--指定其他mapper文件的位置：
+        目的是找到其他文件的SQL语句
+        -->
+    <mappers>
+        <!-- 使用mapper的resource属性指定mapper文件的路径
+        这个路径是从target/class路径开启的
+
+        使用注意：resource ="mapper文件的路径，使用/分割路径"
+        一个mapper resource指定一个mapper文件
+        -->
+        <!--
+		<mapper resource="dao/StudentDao.xml"/>
+		-->
+        <package name="com.yaop.dao"/>
+    </mappers>
+</configuration>
