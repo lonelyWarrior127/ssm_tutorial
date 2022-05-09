@@ -1,0 +1,49 @@
+<!DOCTYPE web-app PUBLIC
+ "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+ "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+  <display-name>Archetype Created Web Application</display-name>
+
+    <!--    声明监听器对象
+    默认监听器创建容器对象是，读取的配置文件：/WEB-INF/spring-beans.xml
+    -->
+    <!--    自定义容器使用的配置文件路径
+            context-param：叫做上下文参数，给监听器提供参数
+            contextConfigLocation：名称是固定的，表示自定义spring配置文件的路径
+            aram-value：变量的值，自定义路径 <param-value>classpath:spring-beans.xml,mybeans.xml</param-value>
+    -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring-beans.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>AddStudentServlet</servlet-name>
+        <servlet-class>controller.AddStudentServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>QueryStudentServlet</servlet-name>
+        <servlet-class>controller.QueryStudentServlet</servlet-class>
+    </servlet>
+
+
+    <servlet-mapping>
+        <servlet-name>AddStudentServlet</servlet-name>
+        <url-pattern>/add</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet-mapping>
+        <servlet-name>QueryStudentServlet</servlet-name>
+        <url-pattern>/queryStudent</url-pattern>
+    </servlet-mapping>
+
+
+
+</web-app>
+
+
