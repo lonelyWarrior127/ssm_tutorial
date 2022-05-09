@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
     <context:property-placeholder location="classpath:jdbc.properties"/>
 
     <bean id="myDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-            <property name="url" value="${jdbc.url}" />
-            <property name="username" value="${jdbc.user}" />
-            <property name="password" value="${jdbc.password}" />
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
     </bean>
 
 
     <bean id="factory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref ="myDataSource"/>
+        <property name="dataSource" ref="myDataSource"/>
         <property name="configLocation" value="classpath:mybatis.xml"/>
     </bean>
 
@@ -32,17 +33,52 @@
         <property name="saleDao" ref="saleDao"/>
     </bean>
 
-    <!--    声明事务的控制-->
-    <!--    声明事务管理器-->
+<!--    &lt;!&ndash;    声明事务的控制&ndash;&gt;-->
+<!--    &lt;!&ndash;    声明事务管理器&ndash;&gt;-->
+<!--    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">-->
+<!--        &lt;!&ndash; 指定数据源DataSource       <&ndash;&gt;-->
+<!--        <property name="dataSource" ref="myDataSource"/>-->
+<!--    </bean>-->
+<!--    &lt;!&ndash;    开启事务注解驱动：告诉框架框架使用注解管理事务-->
+<!--            transaction-manager：指定事务管理器的id-->
+<!--    &ndash;&gt;-->
+<!--    <tx:annotation-driven transaction-manager="transactionManager"/>-->
+
+        <!--声明式事务：不用写代码    -->
+        <!--1. 声明事务管理器    -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <!-- 指定数据源DataSource       <-->
         <property name="dataSource" ref="myDataSource"/>
     </bean>
-    <!--    开启事务注解驱动：告诉框架框架使用注解管理事务
-            transaction-manager：指定事务管理器的id
+    <!--声明业务方法的事务属性（隔离级别，传递行为，超时）
+        id:给业务方法配置事务段代码七个名称：唯一值
+        transaction-manager:事务管理器的id
     -->
-    <tx:annotation-driven transaction-manager="transactionManager" />
+    <tx:advice id="serviceAdvice" transaction-manager="transactionManager">
+        <!--给具体的业务方法增加事务的说明    -->
+        <tx:attributes>
+    <!--给具体的业务方法，说明它需要的事务属性
+        name :业务方法名称。配置name值：1.业务方法的名称 2. 带有部分通配符的方法名称 3. 使用*
+        rollback-for:指定回滚的异常类列表，使用异常类全限定名称
+    -->
+            <tx:method name="buy" propagation="REQUIRED" isolation="DEFAULT" read-only="false" timeout="20"
+                       rollback-for="org.example.exception.NotEnoughException，java.lang.NullPointerException"/>
+            <!-- 在业务方法有命名规则后，可以对一些方法使用事务           -->
+            <tx:method name="add*" propagation="REQUIRED" isolation="DEFAULT" timeout="20"/>
+            <!-- 以上方法以外的           -->
+            <tx:method name="*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
 
+    </tx:advice>
+    <!-- 声明切入点表达式，表示哪些包中的类，类中的方法参与事务   -->
+    <aop:config>
+    <!--声明切入点表达式
+    expression：切入点表达式，表示哪些类和类中的方法要参与事务
+        id：切入点表达式的名称，唯一值
+    -->
+        <aop:pointcut id="servicePointcut" expression="execution(* *..service..*.*(..))"/>
+        <!-- 关联切入点表达式和事务通知       -->
+        <aop:advisor advice-ref="serviceAdvice" pointcut-ref="servicePointcut"/>
+    </aop:config>
 
 
 </beans>
