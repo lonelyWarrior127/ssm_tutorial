@@ -769,6 +769,94 @@ Spring是父容器，SpringMVC是子容器
 7.写java代码，实体类，dao接口和mapper文件，service类，controller类。使用注解声明对象和赋值
 8.创建视图文件，各种jsp
 
+#### 3.4 相对路径
+
+在页面中，有路径的问题，访问路径有“/”开头的，还有无“/”。
+
+```xml
+<a href = "test/some.do" >没有/开头</a>
+<a href = "/test/some.do" >有/开头</a>
+<a href = "https://www.baidu.com" >有协议开头的地址</a>
+```
+
+页面中的地址的区别：
+
+1. 有协议开头的地址（如，"https://www.baidu.com"），称为绝对地址，地址是唯一的，能直接访问
+2. 没有协议开头的，称为相对地址相对地址单独使用不能表示某个资源，不读访问。相对地址必须优参考地址在一起，才能表示一个资源的完整地址，才能访问。
+
+- ​	参考地址：有"/"和无“/”参考地址是不同。
+
+1）无斜杠开头的参考地址（当前资源的访问路径）：
+
+- ```
+  当前访问的地址：http://localhost:8080/ssm_prj/index.jsp
+  - 资源名称：index.jsp
+  - 资源路径：http:l//ocalhost:8080/ssm_prj
+  
+  在index.jsp有访问地址 href=“”test/some.do"
+  点击test/some.do后，地址变成http://localhost:8080/ssm_prj/test/some.do
+  - 资源名称，some.do
+  - 资源路径 http://localhost:8080/ssm_prj/test/
+  
+  再点击test/some.do 地址http://localhost:8080/ssm_prj/test/test/some.do
+  ```
+
+  **没有斜杠开头的地址：参考地址+当前的相对地址 ->访问地址**
+
+  出现问题：第二次访问相同地址后，访问地址发生变化而不能成功访问到资源
+
+  【解决方式】
+
+  1）使用${pageContext.request.contextPath}，表示访问项目的路径（上下文context path）
+
+  ```xml
+  <a href = "${pageContext.request.contextPath}/test/some.do">发起请求test/some.do</a>
+  ```
+
+  优点：好理解。  缺点：每个链接地址都需要＋el表达式
+
+  2）固定当前中没有斜杠开头的地址的参考地址
+
+  ```html
+  使用html base 标签 <base> 标签为页面上的所有链接规定默认地址或默认目标。
+  
+  <head>
+  <base href="http://localhost:8080/ssm_prj/" />
+  </head>
+  ```
+
+```html
+<%
+    String basePath = request.getScheme() + "://" + request.getServerName()
+            + ":" + request.getServerPort() + request.getContextPath() + "/";
+%>
+<base href="<%=basePath%>">
+```
+
+2）有头的参考地址：
+
+```xml
+<a href = "/test/some.do" >有/开头</a>
+```
+
+```xml
+当前访问的地址：http://localhost:8080/ssm_prj/index.jsp
+在index.jsp有相对地址<a href = "/test/some.do" >有/开头</a>
+点击链接后，地址：http://localhost:8080/test/some.do
+```
+
+使用斜杠开头的地址，参考地址是服务器地址，即从协议开始到端口号位置 http://localhost:8080/
+
+使用参考地址 +相对地址 -> 访问地址
+
+出现问题：地址缺少项目访问路径
+
+【解决方法】：在路径的前面加上el表达式${pageContext.request.contextPath}
+
+```xml
+<a href = "${pageContext.request.contextPath}/test/some.do">发起请求test/some.do</a>
+```
+
 
 
 ### 4. SpringMVC核心技术
