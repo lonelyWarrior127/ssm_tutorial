@@ -745,11 +745,11 @@ SpringMVC容器：在web.xml声明了中央调度器DispatchServlet。在这个s
 
 ```java
 //内存中，创建对象
-WebApplicationContext spring = new WebApplicationContext(); //spring --map:service dao
-WebApplicationContext springmvc = new WebApplicationContext(); // springmvc -- map:controller
+WebApplicationContext spring = new WebApplicationContext(); //spring --map(service,dao)
+WebApplicationContext springmvc = new WebApplicationContext(); // springmvc -- map:(controller)
 ```
 
-SpringMVC容器和Spring容器的关系：设计上MVC容器对象时Spring容器的子容器。
+SpringMVC容器和Spring容器的关系：设计上MVC容器对象是Spring容器的子容器。
 
 Spring是父容器，SpringMVC是子容器
 
@@ -768,6 +768,8 @@ Spring是父容器，SpringMVC是子容器
 6.写spring，springmvc，mybatis配置文件
 7.写java代码，实体类，dao接口和mapper文件，service类，controller类。使用注解声明对象和赋值
 8.创建视图文件，各种jsp
+
+
 
 ### 4. SpringMVC核心技术
 

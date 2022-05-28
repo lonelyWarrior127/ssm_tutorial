@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--设置日志-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+
+    <typeAliases>
+        <!--domain包中的类名就是别名-->
+        <package name="com.bjpowernode.domain" />
+    </typeAliases>
+
+
+    <mappers>
+        <!--加载dao包中的所有mapper文件-->
+       <package name="com.bjpowernode.dao" />
+    </mappers>
+</configuration>
